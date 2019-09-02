@@ -134,7 +134,7 @@ def clean_holdings(month, year):
     foreign = _rename_cols(foreign)
 
     df = pd.concat([national, foreign], sort=False)
-    print(df.head())
+    print(df.columns)
 
     df.sort_values('run_fondo', axis=1, inplace=True)
 
