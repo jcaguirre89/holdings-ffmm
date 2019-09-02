@@ -92,7 +92,7 @@ def get_holdings(month, year, portfolio):
     return df
 
 
-def clean_holdings(df):
+def _rename_cols(df):
     """ cleans df with holdings data """
     df = df.copy()
     portfolio = df.iloc[0]['portfolio']
@@ -108,8 +108,7 @@ def clean_holdings(df):
 def save_holdings(df):
     """ save holdings """
     # TODO: switch to SQL
-    portfolio = df.iloc[0]['portfolio']
-    df.to_csv(f'data/out{portfolio}.csv')
+    df.to_csv(f'data/out.csv')
 
 
 def _build_parser():
@@ -124,11 +123,22 @@ def _build_parser():
                         dest='year',
                         help='Year',
                         required=True)
-    parser.add_argument('--portfolio',
-                        type=str,
-                        dest='portfolio',
-                        help='either NACI or EXTR')
     return parser
+
+
+def clean_holdings(month, year):
+    """ cleans holdings """
+    national = get_holdings(month=month, year=year, portfolio='NACI')
+    national = _rename_cols(national)
+    foreign = get_holdings(month=month, year=year, portfolio='EXTR')
+    foreign = _rename_cols(foreign)
+
+    df = pd.concat([national, foreign], sort=False)
+    print(df.head())
+
+    df.sort_values('run_fondo', axis=1, inplace=True)
+
+    return df
 
 
 def main():
@@ -137,10 +147,9 @@ def main():
     options = parser.parse_args()
     month = options.month
     year = options.year
-    portfolio = options.portfolio
 
-    df = get_holdings(month=month, year=year, portfolio=portfolio)
-    df = clean_holdings(df)
+    df = clean_holdings(month, year)
+
     save_holdings(df)
 
 
