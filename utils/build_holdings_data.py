@@ -14,4 +14,4 @@ def main(start, end):
 
 if __name__ == '__main__':
     df = main(2018, 2019)
-    df.to_csv('out_many.csv')
+    df.to_csv('holdings-2018-2019.csv', index=False)
