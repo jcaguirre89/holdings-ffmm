@@ -129,14 +129,16 @@ def _build_parser():
 def clean_holdings(month, year):
     """ cleans holdings """
     national = get_holdings(month=month, year=year, portfolio='NACI')
-    national = _rename_cols(national)
     foreign = get_holdings(month=month, year=year, portfolio='EXTR')
+    # If both dataframes are empty, return an empty dataframe
+    if national.empty and foreign.empty:
+        return pd.DataFrame()
+    national = _rename_cols(national)
     foreign = _rename_cols(foreign)
 
     df = pd.concat([national, foreign], sort=False)
-    print(df.head())
 
-    df.sort_values('run_fondo', axis=1, inplace=True)
+    df.sort_values('run_fondo', inplace=True)
 
     return df
 
