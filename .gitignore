@@ -3,3 +3,8 @@ data/
 *.swp
 ___pycache__/
 *.csv
+*.pyc
+db.sqlite3
+node_modules/
+.cache/
+.ipynb_checkpoints/
