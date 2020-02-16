@@ -8,10 +8,14 @@ def main(start, end):
         for month in range(1, 13):
             print(f'Getting data for {month} - {year}')
             zero_padded_month = str(month).zfill(2)
-            df = get_data.clean_holdings(zero_padded_month, str(year))
+            try:
+                df = get_data.clean_holdings(zero_padded_month, str(year))
+            except IndexError:
+                df = pd.DataFrame()
             master_df = pd.concat([master_df, df])
     return master_df
 
 if __name__ == '__main__':
     df = main(2018, 2019)
     df.to_csv('holdings-2018-2019.csv', index=False)
+    #df.to_parquet('holdings-2018-2019.parquet.gzip', compression='gzip', index=False)
